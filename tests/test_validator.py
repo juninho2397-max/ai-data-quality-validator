@@ -21,3 +21,17 @@ def test_missing_and_duplicates_are_detected():
     assert result["valid"] is False
     assert result["duplicate_count"] == 1
     assert result["missing_by_field"]["text"] == 2
+
+
+def test_whitespace_only_text_is_missing():
+    records = [
+        {"id": 1, "text": "   "},
+        {"id": 2, "text": "valid text"},
+    ]
+
+    result = validate_records(records, ["id", "text"])
+
+    assert result["valid"] is False
+    assert result["missing_by_field"]["text"] == 1
+    assert result["missing_total"] == 1
+    assert result["duplicate_count"] == 0
